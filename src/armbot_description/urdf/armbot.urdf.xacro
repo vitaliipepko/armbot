@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="armbot">
+
+    <xacro:property name="PI" value="3.14159"/>
+    <xacro:property name="effort" value="30"/>
+    <xacro:property name="velocity" value="10"/>
+
+    <link name="world"/>
+
+    <link name="basement_link">
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <mesh filename="package://armbot_description/mesh/Basement.STL" scale="0.05 0.05 0.05"/>
+            </geometry>
+        </visual>
+        
+    </link>
+
+    <link name="base_link">
+        <visual>
+            <origin xyz="0.0 0.0 0.23" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <mesh filename="package://armbot_description/mesh/Base.STL" scale="0.05 0.05 0.05"/>
+            </geometry>
+        </visual>
+        
+    </link>
+
+
+    <joint name="virtual_joint" type="fixed">
+        <parent link="world"/>
+        <child link="basement_link"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <joint name="joint_1" type="revolute">
+        <parent link="basement_link"/>
+        <child link="base_link"/>
+        <origin xyz="0 0 0.23" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-${PI}" upper="${PI}" effort="${effort}" velocity="${velocity}"/>
+    </joint>
+</robot>
