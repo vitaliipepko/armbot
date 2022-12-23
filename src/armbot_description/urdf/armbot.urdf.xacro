@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="armbot">
 
-    <xacro:property name="PI" value="3.14159"/>
+    <xacro:property name="PI" value="3.14"/>
     <xacro:property name="effort" value="30"/>
     <xacro:property name="velocity" value="10"/>
 
@@ -13,8 +13,10 @@
             <geometry>
                 <mesh filename="package://armbot_description/mesh/Basement.STL" scale="0.05 0.05 0.05"/>
             </geometry>
+            <material name="orange">
+                <color rgba="${255/255} ${108/255} ${10/255} 1.0"/>
+            </material>
         </visual>
-        
     </link>
 
     <link name="base_link">
@@ -23,9 +25,73 @@
             <geometry>
                 <mesh filename="package://armbot_description/mesh/Base.STL" scale="0.05 0.05 0.05"/>
             </geometry>
+            <material name="orange">
+                <color rgba="${255/255} ${108/255} ${10/255} 1.0"/>
+            </material>
         </visual>
-        
     </link>
+
+    <link name="vertical_arm_link">
+        <visual>
+            <origin xyz="-0.035 -0.905 2.47" rpy="0 -${PI} ${PI}"/>
+            <geometry>
+                <mesh filename="package://armbot_description/mesh/Vertical_arm.STL" scale="0.05 0.05 0.05"/>
+            </geometry>
+            <material name="orange">
+                <color rgba="${255/255} ${108/255} ${10/255} 1.0"/>
+            </material>
+        </visual>
+    </link>
+
+    <link name="horizontal_arm_link">
+        <visual>
+            <origin xyz="-0.022 0.2 0.01" rpy="0 -${PI} ${PI}"/>
+            <geometry>
+                <mesh filename="package://armbot_description/mesh/Horizontal_arm.STL" scale="0.05 0.05 0.05"/>
+            </geometry>
+            <material name="orange">
+                <color rgba="${255/255} ${108/255} ${10/255} 1.0"/>
+            </material>
+        </visual>
+    </link>
+
+    <link name="claw_support">
+        <visual>
+            <origin xyz="0.32 -0.068 -0.07" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://armbot_description/mesh/Claw_support.STL" scale="0.05 0.05 0.05"/>
+            </geometry>
+            <material name="orange">
+                <color rgba="${255/255} ${108/255} ${10/255} 1.0"/>
+            </material>
+        </visual>
+    </link>
+
+    <link name="gripper_right">
+        <visual>
+            <origin xyz="-0.03 0 0.01" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://armbot_description/mesh/Gripper_right.STL" scale="0.05 0.05 0.05"/>
+            </geometry>
+            <material name="orange">
+                <color rgba="${255/255} ${108/255} ${10/255} 1.0"/>
+            </material>
+        </visual>
+    </link>
+
+    <link name="gripper_left">
+        <visual>
+            <origin xyz="-0.03 0 0.01" rpy="${PI} 0 0"/>
+            <geometry>
+                <mesh filename="package://armbot_description/mesh/Gripper_right.STL" scale="0.05 0.05 0.05"/>
+            </geometry>
+            <material name="orange">
+                <color rgba="${255/255} ${108/255} ${10/255} 1.0"/>
+            </material>
+        </visual>
+    </link>
+
+    <link name="tool_link"/>
 
 
     <joint name="virtual_joint" type="fixed">
@@ -40,5 +106,50 @@
         <origin xyz="0 0 0.23" rpy="0 0 0"/>
         <axis xyz="0 0 1"/>
         <limit lower="-${PI}" upper="${PI}" effort="${effort}" velocity="${velocity}"/>
+    </joint>
+
+    <joint name="joint_2" type="revolute">
+        <parent link="base_link"/>
+        <child link="vertical_arm_link"/>
+        <origin xyz="0 0 0.43" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit lower="-${PI/2}" upper="${PI/2}" effort="${effort}" velocity="${velocity}"/>
+    </joint>
+
+    <joint name="joint_3" type="revolute">
+        <parent link="vertical_arm_link"/>
+        <child link="horizontal_arm_link"/>
+        <origin xyz="-0.03 0 2.52" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit lower="-${PI/2}" upper="${PI/2}" effort="${effort}" velocity="${velocity}"/>
+    </joint>
+
+    <joint name="vertical_arm_to_claw_support" type="fixed">
+        <parent link="horizontal_arm_link"/>
+        <child link="claw_support"/>
+        <origin xyz="2.11 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <joint name="joint_4" type="revolute">
+        <parent link="claw_support"/>
+        <child link="gripper_right"/>
+        <origin xyz="0.38 -0.16 -0.03" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-${PI/4.7}" upper="0" effort="${effort}" velocity="${velocity}"/>
+    </joint>
+
+    <joint name="joint_5" type="revolute">
+        <parent link="claw_support"/>
+        <child link="gripper_left"/>
+        <origin xyz="0.38 0.02 -0.03" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="0" upper="${PI/4.7}" effort="${effort}" velocity="${velocity}"/>
+        <mimic joint="joint_4" offset="0" multiplier="-1"/>
+    </joint>
+
+    <joint name="gripper_right_to_tool" type="fixed">
+        <parent link="gripper_right"/>
+        <child link="tool_link"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
     </joint>
 </robot>
