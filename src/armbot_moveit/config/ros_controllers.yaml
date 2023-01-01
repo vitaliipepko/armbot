@@ -1,0 +1,48 @@
+arm_controller:
+  type: position_controllers/JointTrajectoryController
+  joints:
+    - joint_1
+    - joint_2
+    - joint_3
+  gains:
+    joint_1:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    joint_2:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    joint_3:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+gripper_controller:
+  type: position_controllers/JointTrajectoryController
+  joints:
+    - joint_4
+  gains:
+    joint_4:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+
+controller_list:
+  - name: armbot/arm_controller
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: True
+    joints:
+      - joint_1
+      - joint_2
+      - joint_3
+  - name: armbot/gripper_controller
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: True
+    joints:
+      - joint_4

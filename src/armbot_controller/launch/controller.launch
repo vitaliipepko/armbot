@@ -9,7 +9,7 @@
     <param name="robot_description" command="$(find xacro)/xacro $(find armbot_description)/urdf/armbot.urdf.xacro"/>
 
     <group unless="$(arg is_sim)">
-        <node pkg="armbot_controller" type="angles_converter.py" name="angles_converter" 
+        <node pkg="armbot_controller" type="angles_converter" name="angles_converter" 
             respawn="true" output="screen"/>
 
         <node name="armbot_interface_node" pkg="armbot_controller" type="armbot_interface_node" 
