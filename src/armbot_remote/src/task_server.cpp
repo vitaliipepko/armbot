@@ -36,16 +36,16 @@ public:
     if (goal->task_number == 0)
     {
       arm_goal_ = {0.0, 0.0, 0.0};
-      gripper_goal_ = {-0.7, 0.7};
+      gripper_goal_ = {0.0, 0.0};
     }
     else if (goal->task_number == 1)
     {
-      arm_goal_ = {-1.14, -0.6, -0.07};
-      gripper_goal_ = {0.0, 0.0};
+      arm_goal_ = {1.14, 0.6, -0.07};
+      gripper_goal_ = {-0.7, 0.7};
     }
     else if (goal->task_number == 2)
     {
-      arm_goal_ = {-1.57,0.0,-1.0};
+      arm_goal_ = {0.0, 0.0, 1.0};
       gripper_goal_ = {0.0, 0.0};
     }
     else
@@ -54,19 +54,15 @@ public:
       return;
     }
 
-    // Sends a goal to the moveit API
     arm_move_group_.setJointValueTarget(arm_goal_);
     gripper_move_group_.setJointValueTarget(gripper_goal_);
 
-    // blocking functions below, will return after the execution
     arm_move_group_.move();
     gripper_move_group_.move();
 
-    // Make sure that no residual movement remains
     arm_move_group_.stop();
     gripper_move_group_.stop();
 
-    // check that preempt has not been requested by the client
     if (as_.isPreemptRequested() || !ros::ok())
     {
       ROS_INFO("%s: Preempted", action_name_.c_str());
@@ -74,7 +70,6 @@ public:
       success = false;
     }
 
-    // check if the goal request has been executed correctly
     if(success)
     {
       result_.success = true;

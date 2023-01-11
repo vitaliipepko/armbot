@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+
+    <node pkg="armbot_remote" type="task_server" name="task_server" respawn="true" output="screen"/>
+    <node pkg="armbot_remote" type="alexa_interface.py" name="alexa_interface" respawn="true" output="screen"/>
+
+</launch>

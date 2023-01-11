@@ -1,0 +1,22 @@
+
+<launch>
+
+    <arg name="model" default="$(find armbot_description)/urdf/armbot.urdf.xacro"/>
+  
+    <include file="$(find armbot_description)/launch/gazebo.launch">
+      <arg name="model" value="$(arg model)" />
+    </include>
+  
+    <include file="$(find armbot_controller)/launch/controller.launch">
+      <arg name="is_sim" value="true"/>
+    </include>
+  
+    <include file="$(find armbot_moveit)/launch/move_group.launch"/>
+  
+    <include file="$(find armbot_moveit)/launch/moveit_rviz.launch">
+      <arg name="rviz_config" value="$(find armbot_moveit)/launch/moveit.rviz"/>
+    </include>
+  
+    <include file="$(find armbot_remote)/launch/remote_interface.launch"/>
+  
+  </launch>
