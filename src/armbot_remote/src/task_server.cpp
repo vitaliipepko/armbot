@@ -41,7 +41,7 @@ public:
     else if (goal->task_number == 1)
     {
       arm_goal_ = {1.14, 0.6, -0.07};
-      gripper_goal_ = {-0.7, 0.7};
+      gripper_goal_ = {0.7, -0.7};
     }
     else if (goal->task_number == 2)
     {
