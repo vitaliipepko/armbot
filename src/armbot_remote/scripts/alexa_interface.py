@@ -52,6 +52,23 @@ class PickIntentHandler(AbstractRequestHandler):
         return handler_input.response_builder.response
 
 
+class MoveIntentHandler(AbstractRequestHandler):
+    def can_handle(self, handler_input):
+        return is_intent_name("MoveForwardIntent")(handler_input)
+
+    def handle(self, handler_input):
+        speech_text = "Ok, I'm moving"
+
+        handler_input.response_builder.speak(speech_text).set_card(
+            SimpleCard("Move", speech_text)).set_should_end_session(
+            True)
+
+        goal = ArmbotTaskGoal(task_number=2)
+        client.send_goal(goal)
+
+        return handler_input.response_builder.response
+
+
 class SleepIntentHandler(AbstractRequestHandler):
     def can_handle(self, handler_input):
         return is_intent_name("SleepIntent")(handler_input)
@@ -63,7 +80,7 @@ class SleepIntentHandler(AbstractRequestHandler):
             SimpleCard("Sleep", speech_text)).set_should_end_session(
             True)
 
-        goal = ArmbotTaskGoal(task_number=2)
+        goal = ArmbotTaskGoal(task_number=3)
         client.send_goal(goal)
 
         return handler_input.response_builder.response
@@ -102,6 +119,7 @@ skill_builder = SkillBuilder()
 skill_builder.add_request_handler(LaunchRequestHandler())
 skill_builder.add_request_handler(PickIntentHandler())
 skill_builder.add_request_handler(SleepIntentHandler())
+skill_builder.add_request_handler(MoveIntentHandler())
 skill_builder.add_request_handler(WakeIntentHandler())
 skill_builder.add_exception_handler(AllExceptionHandler())
 
